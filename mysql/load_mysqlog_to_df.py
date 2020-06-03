@@ -1,3 +1,6 @@
+#using the sql_log_parser.py delivery
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_colwidth', -1)
 import pandas as pd 
 general_log = open("/Users/allcloud/Downloads/mysql-slowquery.log.11.txt")
 log = SlowQueryLog(general_log)
@@ -13,4 +16,5 @@ try:
         c+=1 
 except StopIteration:
     print(c)
-df.head()
+df['query_time']=df.query_time.astype(float)
+df.nlargest(10,'query_time')
