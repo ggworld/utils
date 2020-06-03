@@ -13,7 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-#
+# coming from: https://github.com/pdvyas/mysql-log-parser 
+# 
+
+
+#to run  f = open('mysql-slow-query.log')
+#log = SlowQueryLog(f)
+#log.next()
 # Geva: Fix the code to comply with new format remove some fields 
 """Module with parsers for General and Slow Query Log.
 """
