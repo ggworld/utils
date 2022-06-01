@@ -1,7 +1,7 @@
 #good source and example for this package : https://www.programcreek.com/python/example/105718/moviepy.editor.VideoFileClip
 
 from moviepy.editor import *
-
+my_list ={}
 
 #looping on all video files named 1-7 
 for i in range(1,8):
