@@ -1,0 +1,69 @@
+doctype html
+html
+  head
+    title JSON Tree Viewer
+    style.
+      ul.json-tree {
+        font-family: monospace;
+        list-style: none;
+        font-size: 18px;  // Adjust the size to your liking
+      }
+      .json-tree .indicator {
+        cursor: pointer;
+        user-select: none;
+      }
+      .json-tree .collapsed > ul {
+        display: none;
+      }
+  body
+    ul#tree.json-tree
+    script.
+      // Function to parse JSON from URL parameter
+      function getURLParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+      }
+
+      // Function to create collapsible JSON tree
+      function createTree(container, json, isRootArray = false) {
+        for (let key in json) {
+          let value = json[key];
+          let item = document.createElement('li');
+          let indicator = document.createElement('span');
+          let subList = document.createElement('ul');
+          indicator.textContent = '+';
+          indicator.className = 'indicator';
+          indicator.onclick = function(event) {
+            event.stopPropagation();
+            item.classList.toggle('collapsed');
+            indicator.textContent = item.classList.contains('collapsed') ? '+' : '-';
+          };
+          item.appendChild(indicator);
+          item.appendChild(document.createTextNode(` ${isRootArray ? '['+key+']' : key}`));
+          item.appendChild(subList);
+          item.classList.add('collapsed');
+          container.appendChild(item);
+          if (Array.isArray(value)) {
+            value.forEach((element, index) => {
+              createTree(subList, {[index]: element}, true);
+            });
+          } else if (typeof value === 'object' && value !== null) {
+            createTree(subList, value);
+          } else {
+            item.removeChild(indicator); // Remove indicator if the item is not collapsible
+            item.removeChild(subList); // Remove sublist if the item is not collapsible
+            item.textContent += `: ${value}`;
+          }
+        }
+      }
+
+      // Get JSON from URL parameter
+      let jsonParam = getURLParameter('json');
+      if (jsonParam) {
+        try {
+          let jsonObj = JSON.parse(jsonParam);
+          let container = document.getElementById('tree');
+          createTree(container, jsonObj);
+        } catch (e) {
+          console.error("Invalid JSON provided as parameter", e);
+        }
+      }
